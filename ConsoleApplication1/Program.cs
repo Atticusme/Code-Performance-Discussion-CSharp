@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace ConsoleApplication1
+namespace PerformanceCodeIllustrator
 {
     public static class MyExtensions
     {

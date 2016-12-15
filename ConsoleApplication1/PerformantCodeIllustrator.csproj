@@ -7,8 +7,8 @@
     <ProjectGuid>{70C3EEB4-AFBA-41B5-88E6-43449E16DF91}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConsoleApplication1</RootNamespace>
-    <AssemblyName>ConsoleApplication1</AssemblyName>
+    <RootNamespace>PerformanceCodeIllustrator</RootNamespace>
+    <AssemblyName>PerformanceCodeIllustrator</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
