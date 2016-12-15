@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformantCodeIllustrator", "ConsoleApplication1\PerformantCodeIllustrator.csproj", "{70C3EEB4-AFBA-41B5-88E6-43449E16DF91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformantCodeIllustrator", "PerformantCodeIllustrator\PerformantCodeIllustrator.csproj", "{70C3EEB4-AFBA-41B5-88E6-43449E16DF91}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerTests", "PerformanceCodeIllustratorTests\WorkerTests.csproj", "{35ECB15E-3705-4BB3-9E4E-61DDF09D8933}"
 EndProject
