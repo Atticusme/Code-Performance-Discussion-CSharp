@@ -49,8 +49,7 @@ namespace PerformanceCodeIllustrator
             WriteIntro();
 
             int smallMax = 100000;         // a maximum for the original implementation (too slow to use the same max as otheres)
-            int largeMax = 2000000;       // a good test for optimized operations
-            int reallyLargeMax = 10000000; // a good test for final comparisons
+            int largeMax = 10000000;       // a good test for optimized operations
             int badParallelMax = 1000;     // running in parallel may hurt performance when the test set does not warrant it
 
             Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
@@ -86,8 +85,8 @@ namespace PerformanceCodeIllustrator
             Console.ReadKey();
 
             // 
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimesInParallel, 0, reallyLargeMax, primesPractice.IsPrime_Improvement2);
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimesInParallel, 0, reallyLargeMax, primes.IsPrime);
+            DoEvaluatePrimes(primeEvaluator.EvaluatePrimesInParallel, 0, largeMax, primesPractice.IsPrime_Improvement2);
+            DoEvaluatePrimes(primeEvaluator.EvaluatePrimesInParallel, 0, largeMax, primes.IsPrime);
             Console.WriteLine();
             Console.ReadKey();
         }

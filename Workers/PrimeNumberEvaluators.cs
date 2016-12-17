@@ -35,7 +35,7 @@ namespace Workers
         {
             ValidateRange(ref from, ref to);
             int count = 0;
-            int tests = (to - from) + 1;
+            int tests = to + 1;
             Parallel.For(from, tests, i =>
             {
                 if (IsPrimeFunction(i)) { System.Threading.Interlocked.Add(ref count, 1); }
@@ -43,11 +43,26 @@ namespace Workers
             return count;
         }
 
+        public int GetMaxPrimeInRange(int from, int to, Func<int, bool> IsPrimeFunction)
+        {
+            ValidateRange(ref from, ref to);
+            int max = -1;
+            while (from <= to)
+            {
+                if (IsPrimeFunction(from))
+                {
+                    max = Math.Max(from, max);
+                }
+                from++;
+            }
+            return max;
+        }
+
         public int GetMaxPrimeInRangeInParallel(int from, int to, Func<int, bool> IsPrimeFunction)
         {
             ValidateRange(ref from, ref to);
             int max = -1;
-            int tests = to - from + 1;
+            int tests = to + 1;
             Parallel.For(from, tests, i =>
             {
                 if (IsPrimeFunction(i))

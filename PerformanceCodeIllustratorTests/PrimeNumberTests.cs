@@ -133,16 +133,17 @@ namespace PerformanceCodeIllustratorTests
             Assert.IsTrue(primes.IsPrime(2036339));
         }
 
-        /* This test led to discovery that IsPrime_PseudoDuffsDevice was not a valid optimization
         [TestMethod]
-        public void PseudoDuffsDeviceProvedInvalid()
+        public void PrimeTestFor10029889AreFalse()
         {
-            for (int i = 2; i < 100; i++)
-            {
-                int test = i*i;
-                Assert.IsTrue(primes.IsPrime_PseudoDuffsDevice(test) == primes.IsPrime_Improvement2(test));
-            }
-        }*/
+            Assert.IsFalse(primes.IsPrime(10029889));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor10004573AreTrue()
+        {
+            Assert.IsTrue(primes.IsPrime(10004573));
+        }
 
         [TestMethod]
         public void EvaluatePrimesMatchesWhenParallel()
@@ -194,7 +195,19 @@ namespace PerformanceCodeIllustratorTests
         [TestMethod]
         public void GetMaxPrimeInRangeInParallelFrom0To10Is7()
         {
-            Assert.IsTrue(primeEvaluator.GetMaxPrimeInRangeInParallel(0, 10, primesPractice.IsPrime_Improvement2) == 7);
+            Assert.IsTrue(primeEvaluator.GetMaxPrimeInRangeInParallel(0, 10, primes.IsPrime) == 7);
+        }
+
+        [TestMethod]
+        public void GetMaxPrimeIHighRange()
+        {
+            Assert.IsTrue(primeEvaluator.GetMaxPrimeInRange(29999990, 30000000, primes.IsPrime) == 29999999);
+        }
+
+        [TestMethod]
+        public void GetMaxPrimeIHighRangeInParallel()
+        {
+            Assert.IsTrue(primeEvaluator.GetMaxPrimeInRangeInParallel(29999990, 30000000, primes.IsPrime) == 29999999);
         }
     }
 }
