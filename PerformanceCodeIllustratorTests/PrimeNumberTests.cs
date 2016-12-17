@@ -6,123 +6,195 @@ namespace PerformanceCodeIllustratorTests
     [TestClass]
     public class PrimeNumberTests
     {
+        private Workers.PrimeNumbers_Practice primesPractice = new Workers.PrimeNumbers_Practice();
+        private Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
+        private Workers.PrimeNumberEvaluators primeEvaluator = new Workers.PrimeNumberEvaluators();
+
         [TestMethod]
         public void ZeroIsNotAPrime()
         {
-            Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
+            Assert.IsFalse(primesPractice.IsPrime_Original(0));
+            Assert.IsFalse(primesPractice.IsPrime_Improvement1(0));
+            Assert.IsFalse(primesPractice.IsPrime_Improvement2(0));
             Assert.IsFalse(primes.IsPrime(0));
-            Assert.IsFalse(primes.IsPrime_Improvement1(0));
-            Assert.IsFalse(primes.IsPrime_Improvement2(0));
         }
 
         [TestMethod]
         public void OneIsNotAPrime()
         {
-            Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
+            Assert.IsFalse(primesPractice.IsPrime_Original(1));
+            Assert.IsFalse(primesPractice.IsPrime_Improvement1(1));
+            Assert.IsFalse(primesPractice.IsPrime_Improvement2(1));
             Assert.IsFalse(primes.IsPrime(1));
-            Assert.IsFalse(primes.IsPrime_Improvement1(1));
-            Assert.IsFalse(primes.IsPrime_Improvement2(1));
         }
 
         [TestMethod]
-        public void PrimeTestsAreEqual()
+        public void PrimeTestsFor2AreTrue()
         {
-            Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
-            Assert.IsTrue(primes.IsPrime(7));
-            Assert.IsTrue(primes.IsPrime(7) == primes.IsPrime_Improvement1(7));
-            Assert.IsTrue(primes.IsPrime(7) == primes.IsPrime_Improvement2(7));
-
-            Assert.IsFalse(primes.IsPrime(9));
-            Assert.IsTrue(primes.IsPrime(9) == primes.IsPrime_Improvement1(9));
-            Assert.IsTrue(primes.IsPrime(9) == primes.IsPrime_Improvement2(9));
+            Assert.IsTrue(primesPractice.IsPrime_Original(2));
+            Assert.IsTrue(primesPractice.IsPrime_Improvement1(2));
+            Assert.IsTrue(primesPractice.IsPrime_Improvement2(2));
+            Assert.IsTrue(primes.IsPrime(2));
         }
+
+        [TestMethod]
+        public void PrimeTestsFor3AreTrue()
+        {
+            Assert.IsTrue(primesPractice.IsPrime_Original(3));
+            Assert.IsTrue(primesPractice.IsPrime_Improvement1(3));
+            Assert.IsTrue(primesPractice.IsPrime_Improvement2(3));
+            Assert.IsTrue(primes.IsPrime(3));
+        }
+
+        [TestMethod]
+        public void PrimeTestsFor5AreTrue()
+        {
+            Assert.IsTrue(primesPractice.IsPrime_Original(5));
+            Assert.IsTrue(primesPractice.IsPrime_Improvement1(5));
+            Assert.IsTrue(primesPractice.IsPrime_Improvement2(5));
+            Assert.IsTrue(primes.IsPrime(5));
+        }
+
+        [TestMethod]
+        public void PrimeTestsFor7AreTrue()
+        {
+            Assert.IsTrue(primesPractice.IsPrime_Original(7));
+            Assert.IsTrue(primesPractice.IsPrime_Improvement1(7));
+            Assert.IsTrue(primesPractice.IsPrime_Improvement2(7));
+            Assert.IsTrue(primes.IsPrime(7));
+        }
+
+        [TestMethod]
+        public void PrimeTestsFor9AreFalse()
+        {
+            Assert.IsFalse(primesPractice.IsPrime_Original(9));
+            Assert.IsFalse(primesPractice.IsPrime_Improvement1(9));
+            Assert.IsFalse(primesPractice.IsPrime_Improvement2(9));
+            Assert.IsFalse(primes.IsPrime(9));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor1427AreTrue()
+        {
+            Assert.IsTrue(primes.IsPrime(1427));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor1428AreFalse()
+        {
+            Assert.IsFalse(primes.IsPrime(1428));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor1429AreTrue()
+        {
+            Assert.IsTrue(primes.IsPrime(1429));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor1430AreFalse()
+        {
+            Assert.IsFalse(primes.IsPrime(1430));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor1432AreFalse()
+        {
+            Assert.IsFalse(primes.IsPrime(1432));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor1433AreTrue()
+        {
+            Assert.IsTrue(primes.IsPrime(1433));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor104728AreFalse()
+        {
+            Assert.IsFalse(primes.IsPrime(104728));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor104729AreTrue()
+        {
+            Assert.IsTrue(primes.IsPrime(104729));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor2042041AreFalse()
+        {
+            Assert.IsFalse(primes.IsPrime(2042041));
+        }
+
+        [TestMethod]
+        public void PrimeTestFor2036339AreTrue()
+        {
+            Assert.IsTrue(primes.IsPrime(2036339));
+        }
+
+        /* This test led to discovery that IsPrime_PseudoDuffsDevice was not a valid optimization
+        [TestMethod]
+        public void PseudoDuffsDeviceProvedInvalid()
+        {
+            for (int i = 2; i < 100; i++)
+            {
+                int test = i*i;
+                Assert.IsTrue(primes.IsPrime_PseudoDuffsDevice(test) == primes.IsPrime_Improvement2(test));
+            }
+        }*/
 
         [TestMethod]
         public void EvaluatePrimesMatchesWhenParallel()
         {
-            Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
-            Assert.IsTrue(primes.EvaluatePrimes(0, 8, primes.IsPrime_Improvement2) == primes.EvaluatePrimesInParallel(0, 8, primes.IsPrime_Improvement2));
+            Assert.IsTrue(primeEvaluator.EvaluatePrimes(0, 8, primes.IsPrime) == 
+                primeEvaluator.EvaluatePrimesInParallel(0, 8, primes.IsPrime));
         }
 
         [TestMethod]
         public void EvaluatePrimesMatchesWhenParallelWhenLastOfRangeIsPrime()
         {
-            Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
-            Assert.IsTrue(primes.EvaluatePrimes(0, 7, primes.IsPrime_Improvement2) == primes.EvaluatePrimesInParallel(0, 7, primes.IsPrime_Improvement2));
+            Assert.IsTrue(primeEvaluator.EvaluatePrimes(0, 7, primes.IsPrime) ==
+                primeEvaluator.EvaluatePrimesInParallel(0, 7, primes.IsPrime));
         }
 
         [TestMethod]
         public void EvaluatePrimesWhenFromIsNot0()
         {
-            Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
-            Assert.IsTrue(primes.EvaluatePrimes(5, 7, primes.IsPrime_Improvement2) == 2);
-            Assert.IsTrue(primes.EvaluatePrimes(6, 7, primes.IsPrime_Improvement2) == 1);
+            Assert.IsTrue(primeEvaluator.EvaluatePrimes(5, 7, primes.IsPrime) == 2);
+            Assert.IsTrue(primeEvaluator.EvaluatePrimes(6, 7, primes.IsPrime) == 1);
         }
 
         [TestMethod]
-        public void EvaluatePrimesRangeIsLogical()
+        public void EvaluatePrimesRangeResolved()
         {
-            var exceptionCount = 0;
-            try
-            {
-                Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
-                Assert.IsTrue(primes.EvaluatePrimes(7, 0, primes.IsPrime_Improvement2) == 3);
-            }
-            catch (Exception e)
-            {
-                Assert.IsTrue(e.Message == @"EvaluatePrimes range is invalid");
-                ++exceptionCount;
-            }
-            Assert.IsTrue(exceptionCount == 1);
+            Assert.IsTrue(primeEvaluator.EvaluatePrimes(7, 0, primes.IsPrime) == 4);
         }
 
         [TestMethod]
-        public void EvaluatePrimesRangeInParallelIsLogical()
+        public void EvaluatePrimesRangeResolvedInParallel()
         {
-            var exceptionCount = 0;
-            try
-            {
-                Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
-                Assert.IsTrue(primes.EvaluatePrimesInParallel(7, 0, primes.IsPrime_Improvement2) == 3);
-            }
-            catch (Exception e)
-            {
-                Assert.IsTrue(e.Message == @"EvaluatePrimes range is invalid");
-                ++exceptionCount;
-            }
-            Assert.IsTrue(exceptionCount == 1);
+            Assert.IsTrue(primeEvaluator.EvaluatePrimesInParallel(7, 0, primes.IsPrime) == 4);
+            
         }
 
         [TestMethod]
-        public void GetMaxPrimeInRangeInParallelRangeIsLogical()
+        public void GetMaxPrimeInRangeResolvedInParallel()
         {
-            var exceptionCount = 0;
-            try
-            {
-                Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
-                Assert.IsTrue(primes.GetMaxPrimeInRangeInParallel(7, 0, primes.IsPrime_Improvement2) == 3);
-            }
-            catch (Exception e)
-            {
-                Assert.IsTrue(e.Message == @"EvaluatePrimes range is invalid");
-                ++exceptionCount;
-            }
-            Assert.IsTrue(exceptionCount == 1);
+            Assert.IsTrue(primeEvaluator.GetMaxPrimeInRangeInParallel(7, 0, primes.IsPrime) == 7);
         }
 
         [TestMethod]
         public void EvaluatePrimesRangeIsEqual()
         {
-            Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
-            Assert.IsTrue(primes.EvaluatePrimes(7, 7, primes.IsPrime_Improvement2) == 1);
-            Assert.IsTrue(primes.EvaluatePrimes(9, 9, primes.IsPrime_Improvement2) == 0);
+            Assert.IsTrue(primeEvaluator.EvaluatePrimes(7, 7, primes.IsPrime) == 1);
+            Assert.IsTrue(primeEvaluator.EvaluatePrimes(9, 9, primes.IsPrime) == 0);
         }
 
         [TestMethod]
         public void GetMaxPrimeInRangeInParallelFrom0To10Is7()
         {
-            Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
-            Assert.IsTrue(primes.GetMaxPrimeInRangeInParallel(0, 10, primes.IsPrime_Improvement2) == 7);
+            Assert.IsTrue(primeEvaluator.GetMaxPrimeInRangeInParallel(0, 10, primesPractice.IsPrime_Improvement2) == 7);
         }
     }
 }
