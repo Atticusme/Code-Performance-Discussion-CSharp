@@ -63,9 +63,11 @@ namespace Workers
         }
 
         /// <summary>
-        /// This function was an exploration of optimizing the 2nd improvement, but 
-        /// a failure to get unit test coverage led to deeper evaluation 
-        /// resulting in the final implementation.
+        /// Some optimizations may yield value, but that value may be limited.
+        /// This function yielded a small gain in some cases, but does not seem worth it
+        /// when considering how future developers may need to spend time understanding why it exists.
+        /// Taking time to fully understand the problem or attempting to get 100% unit test coverage 
+        /// leads one to discover the flaw here.
         /// </summary>
         /// <param name="testValue"></param>
         /// <returns></returns>

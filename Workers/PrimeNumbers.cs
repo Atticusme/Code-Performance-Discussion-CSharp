@@ -14,7 +14,8 @@ namespace Workers
         /// the primary test value of 2,000,000 defined in the console application and then extended to 10,000,000
         /// </summary>
         private const int _primeCount = 444;// 222 AND 1427 COVERS 2000000
-        private short[] _primes = new short[_primeCount] { /*2, 3, 5,*/ 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 
+     //   private const int _primeCoverage = 10000000; // The prime values covered by the array
+        static private short[] _primes = new short[_primeCount] { /*2, 3, 5,*/ 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 
             137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 
             317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 
             523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 
@@ -43,17 +44,14 @@ namespace Workers
             3001, 3011, 3019, 3023, 3037, 3041, 3049, 3061, 3067, 3079,
             3083, 3089, 3109, 3119, 3121, 3137, 3163};
 
-        private const int _baseIndex = 2;
-
         /// <summary>
-        /// Realized as a result of some deeper evaluation, 
-        /// this is the latest optimized implementation of of the IsPrime function,
+        /// This is the latest optimized implementation of of the IsPrime function,
         /// </summary>
-        /// <param name="testValue"></param>
-        /// <returns></returns>
+        /// <param name="testValue">Value to be validated as prime or not.</param>
+        /// <returns>returns true when testValue is a prime number, otherwise false</returns>
         public bool IsPrime(int testValue)
         {
-            if (testValue < _baseIndex) return false;
+            if (testValue < 2) return false;
 
             // Factor out the most common eliminators to better performance
             {

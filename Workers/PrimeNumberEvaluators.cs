@@ -20,6 +20,9 @@ namespace Workers
             }
         }
 
+        /// <summary>
+        /// Returns the count of prime numbers within a speicfied range of values.
+        /// </summary>
         public int EvaluatePrimes(int from, int to, Func<int, bool> IsPrimeFunction)
         {
             ValidateRange(ref from, ref to);
@@ -31,6 +34,9 @@ namespace Workers
             return count;
         }
 
+        /// <summary>
+        /// Returns the count of prime numbers within a speicfied range of values.
+        /// </summary>
         public int EvaluatePrimesInParallel(int from, int to, Func<int, bool> IsPrimeFunction)
         {
             ValidateRange(ref from, ref to);
@@ -43,6 +49,9 @@ namespace Workers
             return count;
         }
 
+        /// <summary>
+        /// Returns the highest value that is a prime number within a speicfied range of values.
+        /// </summary>
         public int GetMaxPrimeInRange(int from, int to, Func<int, bool> IsPrimeFunction)
         {
             ValidateRange(ref from, ref to);
@@ -58,6 +67,9 @@ namespace Workers
             return max;
         }
 
+        /// <summary>
+        /// Returns the highest value that is a prime number within a speicfied range of values.
+        /// </summary>
         public int GetMaxPrimeInRangeInParallel(int from, int to, Func<int, bool> IsPrimeFunction)
         {
             ValidateRange(ref from, ref to);
