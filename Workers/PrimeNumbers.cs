@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using System.Runtime.CompilerServices;
 
 namespace Workers
 {
@@ -14,8 +15,7 @@ namespace Workers
         /// the primary test value of 2,000,000 defined in the console application and then extended to 10,000,000
         /// </summary>
         private const int _primeCount = 444;// 222 AND 1427 COVERS 2000000
-     //   private const int _primeCoverage = 10000000; // The prime values covered by the array
-        static private short[] _primes = new short[_primeCount] { /*2, 3, 5,*/ 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 
+        private int[] _primes = new int[_primeCount] { /*2, 3, 5,*/ 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 
             137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 
             317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 
             523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 
@@ -55,6 +55,7 @@ namespace Workers
 
             // Factor out the most common eliminators to better performance
             {
+                // Cost realized when refactoring even if inlined.
                 if ((testValue == 2) ||
                     (testValue == 3) ||
                     (testValue == 5))
@@ -62,29 +63,31 @@ namespace Workers
                     return true;
                 }
 
-                if ((testValue % 2) == 0 ||
-                    (testValue % 3) == 0 ||
+                // Cost realized when refactoring even if inlined.
+                if (((testValue & 1) == 0) || // Found small benefit when testing even vs. remainder.
+                    (testValue % 3) == 0 || 
                     (testValue % 5) == 0)
                 {
                     return false;
                 }
             }
 
-            int maxIteration = (int)Math.Floor(Math.Sqrt(testValue));
+            int maxIteration = (int)Math.Floor(Math.Sqrt(testValue));   // minimize the number of evaluations
 
             int iteration = 0;
-            while (iteration < _primeCount)
+            do
             {
                 if (_primes[iteration] > maxIteration)
                 {
                     return true;
                 }
-                if ((testValue % _primes[iteration]) == 0)
+                if (testValue % _primes[iteration] == 0)
                 {
                     return false;
                 }
                 ++iteration;
-            }
+            } while (iteration < _primeCount);
+
             return (IsPrimeForVeryLargeNumbers(testValue, maxIteration));
         }
 

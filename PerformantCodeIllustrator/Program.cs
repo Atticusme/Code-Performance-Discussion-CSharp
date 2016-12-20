@@ -28,6 +28,12 @@ namespace PerformanceCodeIllustrator
             Console.WriteLine("Atticus Ellena is credited for the original preparation.");
             Console.WriteLine();
             Console.WriteLine("Press any key at each pause to proceed to the next example.");
+            Console.WriteLine();
+#if DEBUG
+            Console.WriteLine("--- DEBUG BUILD ---");
+#else 
+            Console.WriteLine("--- RELEASE BUILD ---");
+#endif
             Console.ReadKey();
             Console.WriteLine();
         }
@@ -55,6 +61,12 @@ namespace PerformanceCodeIllustrator
             Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
             Workers.PrimeNumbers_Practice primesPractice = new Workers.PrimeNumbers_Practice();
             Workers.PrimeNumberEvaluators primeEvaluator = new Workers.PrimeNumberEvaluators();
+
+            /*
+            DoEvaluatePrimes(primeEvaluator.EvaluatePrimesInParallel, 0, largeMax, primes.IsPrime);
+            Console.ReadKey();
+            return;
+            */
 
             // Test the original implementation
             Console.WriteLine("With the first implementation, we have a functional but slow outcome.");
