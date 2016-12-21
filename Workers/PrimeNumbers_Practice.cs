@@ -67,7 +67,7 @@ namespace Workers
         /// This function yielded a small gain in some cases, but does not seem worth it
         /// when considering how future developers may need to spend time understanding why it exists.
         /// Taking time to fully understand the problem or attempting to get 100% unit test coverage 
-        /// leads one to discover the flaw here.
+        /// leads one to discover a flaw here.
         /// </summary>
         /// <param name="testValue"></param>
         /// <returns></returns>

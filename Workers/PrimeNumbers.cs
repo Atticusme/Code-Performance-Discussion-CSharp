@@ -55,7 +55,7 @@ namespace Workers
 
             // Factor out the most common eliminators to better performance
             {
-                // Cost realized when refactoring even if inlined.
+                // Cost seen when refactoring even if inlined.
                 if ((testValue == 2) ||
                     (testValue == 3) ||
                     (testValue == 5))
@@ -63,7 +63,7 @@ namespace Workers
                     return true;
                 }
 
-                // Cost realized when refactoring even if inlined.
+                // Cost seen when refactoring even if inlined.
                 if (((testValue & 1) == 0) || // Found small benefit when testing even vs. remainder.
                     (testValue % 3) == 0 || 
                     (testValue % 5) == 0)
