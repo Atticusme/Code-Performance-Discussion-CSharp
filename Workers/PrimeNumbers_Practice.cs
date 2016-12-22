@@ -56,9 +56,13 @@ namespace Workers
             while (iteration <= y)
             {
                 if ((testValue % iteration) == 0)
+                {
+                    //System.Diagnostics.Trace.TraceInformation("IsPrime_Improvement2 iterations: {0}", iteration);
                     return false;
+                }
                 ++iteration;
             }
+            //System.Diagnostics.Trace.TraceInformation("IsPrime_Improvement2 iterations: {0}", iteration);
             return true;
         }
 

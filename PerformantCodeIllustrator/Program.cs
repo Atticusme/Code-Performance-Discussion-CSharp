@@ -21,10 +21,19 @@ namespace PerformanceCodeIllustrator
         static int _smallMax = 100000;         // a maximum for the original implementation (too slow to use the same max as otheres)
         static int _largeMax = 10000000;       // a good test for optimized operations
         static int _badParallelMax = 1000;     // running in parallel may hurt performance when the test set does not warrant it
-
+        static bool _demo = true;              // Set to false if ReadKey has Shift pressed - usefult when debugging and only want the final tests run
         static Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
         static Workers.PrimeNumbers_Practice primesPractice = new Workers.PrimeNumbers_Practice();
         static Workers.PrimeNumberEvaluators primeEvaluator = new Workers.PrimeNumberEvaluators();
+
+        static void ReadKey()
+        {
+            ConsoleKeyInfo cki = Console.ReadKey();
+            if ((cki.Modifiers & ConsoleModifiers.Shift) != 0)
+            {
+                _demo = false;
+            }
+        }
 
         static void WriteIntro()
         {
@@ -42,7 +51,7 @@ namespace PerformanceCodeIllustrator
 #endif
             Console.WriteLine();
             Console.WriteLine("Press any key at each pause to proceed to the next example.");
-            Console.ReadKey();
+            ReadKey();
             Console.WriteLine();
         }
 
@@ -102,35 +111,50 @@ namespace PerformanceCodeIllustrator
         {
             WriteIntro();
 
-            // Test the original implementation
-            Console.WriteLine("With the first implementation, we have a functional but slow outcome.");
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _smallMax, primesPractice.IsPrime_Original);
-            Console.WriteLine();
-            Console.ReadKey();
+            if (_demo)
+            {
+                // Test the original implementation
+                Console.WriteLine("With the first implementation, we have a functional but slow outcome.");
+                DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _smallMax, primesPractice.IsPrime_Original);
+                Console.WriteLine();
+                ReadKey();
+            }
 
-            // Test the better formula
-            Console.WriteLine("A quick google search revealed a better solution.");
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _smallMax, primesPractice.IsPrime_Improvement1);
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _largeMax, primesPractice.IsPrime_Improvement1);
-            Console.WriteLine();
-            Console.ReadKey();
+            if (_demo)
+            {
+                // Test the better formula
+                Console.WriteLine("A quick google search revealed a better solution.");
+                DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _smallMax, primesPractice.IsPrime_Improvement1);
+                DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _largeMax, primesPractice.IsPrime_Improvement1);
+                Console.WriteLine();
+                ReadKey();
+            }
 
-            // Trivial optimizations and compiler discussion (compare release and debug builds)
-            Console.WriteLine("Minimal evaluation yields even better results.");
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _largeMax, primesPractice.IsPrime_Improvement2);
-            Console.WriteLine();
-            Console.WriteLine("Getting beyond this point required more evaluation.");
-            Console.WriteLine();
-            Console.ReadKey();
+            if (_demo)
+            {
+                // Trivial optimizations and compiler discussion (compare release and debug builds)
+                Console.WriteLine("Minimal evaluation yields even better results.");
+                DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _largeMax, primesPractice.IsPrime_Improvement2);
+                Console.WriteLine();
+                Console.WriteLine("Getting beyond this point required more evaluation.");
+                Console.WriteLine();
+                ReadKey();
+            }
 
-            // Demo the final implementation
-            Console.WriteLine("The final implemenation.");
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _largeMax, primes.IsPrime);
-            Console.WriteLine();
-            Console.ReadKey();
+            if (_demo)
+            {
+                // Demo the final implementation
+                Console.WriteLine("The final implemenation.");
+                DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _largeMax, primes.IsPrime);
+                Console.WriteLine();
+                ReadKey();
+            }
 
-            CompareSmallSetInParallel();
-            Console.ReadKey();
+            if (_demo)
+            {
+                CompareSmallSetInParallel();
+                ReadKey();
+            }
 
             // Compare our optimized version against our cheap version.
             CompareLargeSingleValues();

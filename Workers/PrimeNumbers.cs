@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 namespace Workers
 {
@@ -53,18 +53,19 @@ namespace Workers
         {
             if (testValue < 2) return false;
 
-            // Factor out the most common eliminators to better performance
             {
-                // Cost seen when refactoring even if inlined.
-                if ((testValue == 2) ||
+                // Factor out the most common eliminators to better performance
+                // Keeping these here in hopes of clarifying that a change to IsLowPrime requires a change to CommonElimination.
+
+                if (/*IsLowPrime(testValue)*/
+                    (testValue == 2) ||
                     (testValue == 3) ||
                     (testValue == 5))
                 {
                     return true;
                 }
-
-                // Cost seen when refactoring even if inlined.
-                if (((testValue & 1) == 0) || // Found small benefit when testing even vs. remainder.
+                if (/*CommonElimination(testValue)*/
+                    ((testValue & 1) == 0) ||       // Found small benefit when testing even vs. remainder.
                     (testValue % 3) == 0 || 
                     (testValue % 5) == 0)
                 {
@@ -88,18 +89,43 @@ namespace Workers
                 ++iteration;
             } while (iteration < _primeCount);
 
+            //System.Diagnostics.Trace.TraceInformation("IsPrime iterations: {0}", iteration);
+
             return (IsPrimeForVeryLargeNumbers(testValue, maxIteration));
         }
 
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //private bool IsLowPrime(int testValue)
+        //{
+        //    return ((testValue == 2) || (testValue == 3) || (testValue == 5));
+        //}
+
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //private bool CommonElimination(int testValue)
+        //{
+        //    return (((testValue & 1) == 0) || // Found small benefit when testing even vs. remainder.
+        //            (testValue % 3) == 0 ||
+        //            (testValue % 5) == 0);
+        //}
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsPrimeForVeryLargeNumbers(int testValue, int maxIteration)
         {
-            int iteration = _primes[_primeCount - 1] + 1;
-            while (iteration <= maxIteration)
+            int iteration = 3164;
+            // A minor optimization, but if the array changes, so must this hard coded item.
+            System.Diagnostics.Debug.Assert(iteration == _primes[_primeCount - 1] + 1);
+
+            do
             {
                 if ((testValue % iteration) == 0)
+                {
+                    //System.Diagnostics.Trace.TraceInformation("IsPrimeForVeryLargeNumbers iterations: {0}", iteration);
                     return false;
+                }
                 ++iteration;
-            }
+            } while (iteration <= maxIteration);
+            
+            //System.Diagnostics.Trace.TraceInformation("IsPrimeForVeryLargeNumbers iterations: {0}", iteration);
             return true;
         }
     }
