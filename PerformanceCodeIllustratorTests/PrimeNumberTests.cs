@@ -209,5 +209,14 @@ namespace PerformanceCodeIllustratorTests
         {
             Assert.IsTrue(primeEvaluator.GetMaxPrimeInRangeInParallel(29999990, 30000000, primes.IsPrime) == 29999999);
         }
+
+        [TestMethod]
+        public void GetNextPrime()
+        {
+            Assert.IsTrue(primeEvaluator.NextPrime(2, primes.IsPrime) == 3);
+            Assert.IsTrue(primeEvaluator.NextPrime(3, primes.IsPrime) == 5);
+            Assert.IsTrue(primeEvaluator.NextPrime(3137, primes.IsPrime) == 3163);
+            Assert.IsTrue(primeEvaluator.NextPrime(3137, primesPractice.IsPrime_Original) == 3163);
+        }
     }
 }

@@ -53,10 +53,15 @@ namespace Workers
         {
             if (testValue < 2) return false;
 
+            #region Any modification to one part of this region requires modification to the other part!
             {
-                // Factor out the most common eliminators to better performance
-                // Keeping these here in hopes of clarifying that a change to IsLowPrime requires a change to CommonElimination.
-
+                // NOTE: Keeping these here in hopes of clarifying that a change 
+                //       to IsLowPrime requires a change to CommonElimination.
+                // Of course unit tests should indicate as much
+                
+                // Factoring out the most common eliminators to better performance
+                // 1/2 of all numbers will be eliminated if odd
+                // The first non prime number to fall through is 49 and the next is 77 and so on.
                 if (/*IsLowPrime(testValue)*/
                     (testValue == 2) ||
                     (testValue == 3) ||
@@ -72,6 +77,7 @@ namespace Workers
                     return false;
                 }
             }
+            #endregion
 
             int maxIteration = (int)Math.Floor(Math.Sqrt(testValue));   // minimize the number of evaluations
 

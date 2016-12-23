@@ -87,5 +87,15 @@ namespace Workers
             });
             return max;
         }
+
+        public int NextPrime(int startValue, Func<int, bool> IsPrimeFunction)
+        {
+            int prime = startValue + 1;
+            while (!IsPrimeFunction(prime))
+            {
+                prime++;
+            }
+            return prime;
+        }
     }
 }

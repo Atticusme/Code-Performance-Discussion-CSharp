@@ -22,12 +22,14 @@ namespace PerformanceCodeIllustrator
         static int _largeMax = 10000000;       // a good test for optimized operations
         static int _badParallelMax = 1000;     // running in parallel may hurt performance when the test set does not warrant it
         static bool _demo = true;              // Set to false if ReadKey has Shift pressed - usefult when debugging and only want the final tests run
-        static Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
-        static Workers.PrimeNumbers_Practice primesPractice = new Workers.PrimeNumbers_Practice();
-        static Workers.PrimeNumberEvaluators primeEvaluator = new Workers.PrimeNumberEvaluators();
+        static string _pause = ("Press any key to continue...");
+        static Workers.PrimeNumbers _primes = new Workers.PrimeNumbers();
+        static Workers.PrimeNumbers_Practice _primesPractice = new Workers.PrimeNumbers_Practice();
+        static Workers.PrimeNumberEvaluators _primeEvaluator = new Workers.PrimeNumberEvaluators();
 
         static void ReadKey()
         {
+            Console.WriteLine(_pause);
             ConsoleKeyInfo cki = Console.ReadKey();
             if ((cki.Modifiers & ConsoleModifiers.Shift) != 0)
             {
@@ -50,7 +52,6 @@ namespace PerformanceCodeIllustrator
             Console.WriteLine("--- RELEASE BUILD ---");
 #endif
             Console.WriteLine();
-            Console.WriteLine("Press any key at each pause to proceed to the next example.");
             ReadKey();
             Console.WriteLine();
         }
@@ -63,7 +64,7 @@ namespace PerformanceCodeIllustrator
             string time = stopWatch.FormatElapsed();
 
             Console.WriteLine(String.Format("{0} using {1}", EvaluatePrimesFunction.Method.Name, IsPrimeFunction.Method.Name));
-            Console.WriteLine(String.Format("Evaluating {0} numbers yielded {1} primes and took {2}", 
+            Console.WriteLine(String.Format("Evaluating {0} numbers yielded {1} _primes and took {2}", 
                                              to - from,
                                              primes,
                                              time));
@@ -73,16 +74,16 @@ namespace PerformanceCodeIllustrator
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            primesPractice.IsPrime_Improvement2(10029889);
+            _primesPractice.IsPrime_Improvement2(10029889);
             string time1 = stopWatch.FormatElapsed();
             stopWatch.Restart();
-            primes.IsPrime(10029889);
+            _primes.IsPrime(10029889);
             string time2 = stopWatch.FormatElapsed();
             stopWatch.Restart();
-            primesPractice.IsPrime_Improvement2(10004573);
+            _primesPractice.IsPrime_Improvement2(10004573);
             string time3 = stopWatch.FormatElapsed();
             stopWatch.Restart();
-            primes.IsPrime(10004573);
+            _primes.IsPrime(10004573);
             string time4 = stopWatch.FormatElapsed();
 
             Console.WriteLine(
@@ -99,12 +100,11 @@ namespace PerformanceCodeIllustrator
             // Parallel hurts when the sample size is too small
             Console.WriteLine("Now that we have a solid IsPrime function, ");
             Console.WriteLine("we can consider other options such as multi-threaded evaluations.");
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _badParallelMax, primes.IsPrime);
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimesInParallel, 0, _badParallelMax, primes.IsPrime);
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _badParallelMax, _primes.IsPrime);
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _badParallelMax, _primes.IsPrime);
             Console.WriteLine("These will of course expose even more complexity to account for.");
             Console.WriteLine("This example illustrates how optimizing has actually ");
             Console.WriteLine("hurt performance with a smaller data set.");
-            Console.WriteLine();
         }
 
         static void Main(string[] args)
@@ -115,8 +115,7 @@ namespace PerformanceCodeIllustrator
             {
                 // Test the original implementation
                 Console.WriteLine("With the first implementation, we have a functional but slow outcome.");
-                DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _smallMax, primesPractice.IsPrime_Original);
-                Console.WriteLine();
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Original);
                 ReadKey();
             }
 
@@ -124,9 +123,8 @@ namespace PerformanceCodeIllustrator
             {
                 // Test the better formula
                 Console.WriteLine("A quick google search revealed a better solution.");
-                DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _smallMax, primesPractice.IsPrime_Improvement1);
-                DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _largeMax, primesPractice.IsPrime_Improvement1);
-                Console.WriteLine();
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Improvement1);
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement1);
                 ReadKey();
             }
 
@@ -134,10 +132,9 @@ namespace PerformanceCodeIllustrator
             {
                 // Trivial optimizations and compiler discussion (compare release and debug builds)
                 Console.WriteLine("Minimal evaluation yields even better results.");
-                DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _largeMax, primesPractice.IsPrime_Improvement2);
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
                 Console.WriteLine();
                 Console.WriteLine("Getting beyond this point required more evaluation.");
-                Console.WriteLine();
                 ReadKey();
             }
 
@@ -145,8 +142,7 @@ namespace PerformanceCodeIllustrator
             {
                 // Demo the final implementation
                 Console.WriteLine("The final implemenation.");
-                DoEvaluatePrimes(primeEvaluator.EvaluatePrimes, 0, _largeMax, primes.IsPrime);
-                Console.WriteLine();
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primes.IsPrime);
                 ReadKey();
             }
 
@@ -158,10 +154,14 @@ namespace PerformanceCodeIllustrator
 
             // Compare our optimized version against our cheap version.
             CompareLargeSingleValues();
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, primesPractice.IsPrime_Improvement2);
-            DoEvaluatePrimes(primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, primes.IsPrime);
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, _primes.IsPrime);
+
             Console.WriteLine();
-            Console.ReadKey();
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                Console.ReadKey();
+            }
         }
     }
 }
