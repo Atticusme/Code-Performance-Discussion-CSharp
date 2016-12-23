@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
@@ -29,19 +28,19 @@ namespace PerformanceCodeIllustrator
 
         static void ReadKey()
         {
+            Console.WriteLine();
             Console.WriteLine(_pause);
             ConsoleKeyInfo cki = Console.ReadKey();
             if ((cki.Modifiers & ConsoleModifiers.Shift) != 0)
             {
                 _demo = false;
             }
+            Console.WriteLine();
         }
 
         static void WriteIntro()
         {
-            Console.WriteLine("This project is intended to facillitate a");
-            Console.WriteLine("discussion on performant code as it relates to");
-            Console.WriteLine("the development mindset.");
+            Console.WriteLine("This project is intended to facillitate a discussion on performant code.");
             Console.WriteLine();
             Console.WriteLine("Please feel free to improve and \\ or reuse this presentation providedd");
             Console.WriteLine("Atticus Ellena is credited for the original preparation.");
@@ -51,9 +50,6 @@ namespace PerformanceCodeIllustrator
 #else
             Console.WriteLine("--- RELEASE BUILD ---");
 #endif
-            Console.WriteLine();
-            ReadKey();
-            Console.WriteLine();
         }
 
         static void DoEvaluatePrimes(Func<int, int, Func<int, bool>, int> EvaluatePrimesFunction, int from, int to, Func<int, bool> IsPrimeFunction)
@@ -63,8 +59,10 @@ namespace PerformanceCodeIllustrator
             int primes = EvaluatePrimesFunction.Invoke(from, to, IsPrimeFunction);
             string time = stopWatch.FormatElapsed();
 
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine(String.Format("{0} using {1}", EvaluatePrimesFunction.Method.Name, IsPrimeFunction.Method.Name));
-            Console.WriteLine(String.Format("Evaluating {0} numbers yielded {1} _primes and took {2}", 
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(String.Format("Evaluating {0} numbers yielded {1} primes and took {2}", 
                                              to - from,
                                              primes,
                                              time));
@@ -92,7 +90,6 @@ namespace PerformanceCodeIllustrator
             Console.WriteLine(
                 String.Format("Comparing large prime 10004573: IsPrime_Improvement2 ({0}) vs IsPrime({1})",
                 time3, time4));
-            Console.WriteLine();
         }
 
         static void CompareSmallSetInParallel()
@@ -100,8 +97,10 @@ namespace PerformanceCodeIllustrator
             // Parallel hurts when the sample size is too small
             Console.WriteLine("Now that we have a solid IsPrime function, ");
             Console.WriteLine("we can consider other options such as multi-threaded evaluations.");
+            Console.WriteLine();
             DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _badParallelMax, _primes.IsPrime);
             DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _badParallelMax, _primes.IsPrime);
+            Console.WriteLine();
             Console.WriteLine("These will of course expose even more complexity to account for.");
             Console.WriteLine("This example illustrates how optimizing has actually ");
             Console.WriteLine("hurt performance with a smaller data set.");
@@ -109,7 +108,11 @@ namespace PerformanceCodeIllustrator
 
         static void Main(string[] args)
         {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+
             WriteIntro();
+            ReadKey();
 
             if (_demo)
             {
@@ -132,16 +135,16 @@ namespace PerformanceCodeIllustrator
             {
                 // Trivial optimizations and compiler discussion (compare release and debug builds)
                 Console.WriteLine("Minimal evaluation yields even better results.");
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Improvement2);
                 DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
-                Console.WriteLine();
-                Console.WriteLine("Getting beyond this point required more evaluation.");
                 ReadKey();
             }
 
             if (_demo)
             {
                 // Demo the final implementation
-                Console.WriteLine("The final implemenation.");
+                Console.WriteLine("The final implemenation required more consideration to acheive.");
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primes.IsPrime);
                 DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primes.IsPrime);
                 ReadKey();
             }
@@ -154,6 +157,7 @@ namespace PerformanceCodeIllustrator
 
             // Compare our optimized version against our cheap version.
             CompareLargeSingleValues();
+            Console.WriteLine();
             DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
             DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, _primes.IsPrime);
 
@@ -162,6 +166,8 @@ namespace PerformanceCodeIllustrator
             {
                 Console.ReadKey();
             }
+
+            Console.ResetColor();
         }
     }
 }
