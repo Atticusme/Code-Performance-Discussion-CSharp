@@ -17,10 +17,13 @@ namespace PerformanceCodeIllustrator
 
     class Program
     {
+        static bool _demo = true;              // Set to false if ReadKey has Shift pressed - usefult when debugging and only want the final tests run
+        static bool _pauses = true;             // Set to false if ReadKey has Ctrl pressed - useful in pre-demo to JIT compile everything
+
         static int _smallMax = 100000;         // a maximum for the original implementation (too slow to use the same max as otheres)
         static int _largeMax = 10000000;       // a good test for optimized operations
         static int _badParallelMax = 1000;     // running in parallel may hurt performance when the test set does not warrant it
-        static bool _demo = true;              // Set to false if ReadKey has Shift pressed - usefult when debugging and only want the final tests run
+        
         static string _pause = ("Press any key to continue...");
         static Workers.PrimeNumbers _primes = new Workers.PrimeNumbers();
         static Workers.PrimeNumbers_Practice _primesPractice = new Workers.PrimeNumbers_Practice();
@@ -29,13 +32,21 @@ namespace PerformanceCodeIllustrator
         static void ReadKey()
         {
             Console.WriteLine();
-            Console.WriteLine(_pause);
-            ConsoleKeyInfo cki = Console.ReadKey();
-            if ((cki.Modifiers & ConsoleModifiers.Shift) != 0)
+            if (_pauses)
             {
-                _demo = false;
+                Console.WriteLine(_pause);
+                ConsoleKeyInfo cki = Console.ReadKey();
+                if ((cki.Modifiers & ConsoleModifiers.Shift) != 0)
+                {
+                    _demo = false;
+                }
+                else if ((cki.Modifiers & ConsoleModifiers.Control) != 0)
+                {
+                    _pauses = false;
+                }
+                Console.WriteLine();            
             }
-            Console.WriteLine();
+
         }
 
         static void WriteIntro()
@@ -164,6 +175,7 @@ namespace PerformanceCodeIllustrator
             Console.WriteLine();
             if (System.Diagnostics.Debugger.IsAttached)
             {
+                Console.WriteLine(_pause);
                 Console.ReadKey();
             }
 
