@@ -49,29 +49,25 @@ namespace Workers
         {
             if (testValue < 2) return false;
 
-            #region Any modification to one part of this region requires modification to the other part!
+            #region Factoring out the most common eliminators to better performance
             {
-                // NOTE: Keeping these here in hopes of clarifying that a change 
-                //       to IsLowPrime requires a change to CommonElimination.
-                // Of course unit tests should indicate as much
-                
-                // Factoring out the most common eliminators to better performance
+                // This implementation of testing and discarding in pairs is quicker 
+                // than testing for the primes and then testing for the non-primes.
+                // The commented functions IsLowPrime and CommonElimination called
+                // in sequence illustrate the former implementation.
+
+                if (testValue == 2) return true;
+                // A test for odd number is quicker than a test for remainder.
                 // 1/2 of all numbers will be eliminated if odd
+                if ((testValue & 1) == 0) return false; 
+
+                if (testValue == 3) return true;
+                if ((testValue % 3) == 0) return false;
+
+                if (testValue == 5) return true;
+                if ((testValue % 5) == 0) return false;
+
                 // The first non prime number to fall through is 49 and the next is 77 and so on.
-                if (/*IsLowPrime(testValue)*/
-                    (testValue == 2) ||
-                    (testValue == 3) ||
-                    (testValue == 5))
-                {
-                    return true;
-                }
-                if (/*CommonElimination(testValue)*/
-                    ((testValue & 1) == 0) ||       // Found small benefit when testing even vs. remainder.
-                    (testValue % 3) == 0 || 
-                    (testValue % 5) == 0)
-                {
-                    return false;
-                }
             }
             #endregion
 
@@ -113,9 +109,10 @@ namespace Workers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsPrimeForVeryLargeNumbers(int testValue, int maxIteration)
         {
-            int iteration = 3164;
-            // A minor optimization, but if the array changes, so must this hard coded item.
-            System.Diagnostics.Debug.Assert(iteration == _primes[_primeCount - 1] + 1);
+            int iteration = 3167;   // The next prime after the array end.
+            // Ensure that if the array is changed, the hard coded value will be updated.
+            System.Diagnostics.Debug.Assert(
+                iteration == new PrimeNumberEvaluators().NextPrime(_primes[_primeCount - 1], this.IsPrime));
 
             do
             {

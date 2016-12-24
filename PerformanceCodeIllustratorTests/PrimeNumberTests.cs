@@ -217,6 +217,8 @@ namespace PerformanceCodeIllustratorTests
             Assert.IsTrue(primeEvaluator.NextPrime(3, primes.IsPrime) == 5);
             Assert.IsTrue(primeEvaluator.NextPrime(3137, primes.IsPrime) == 3163);
             Assert.IsTrue(primeEvaluator.NextPrime(3137, primesPractice.IsPrime_Original) == 3163);
+            Assert.IsTrue(primeEvaluator.NextPrime(3164, primesPractice.IsPrime_Original) == 3167);
+            Assert.IsTrue(primeEvaluator.NextPrime(3167, primesPractice.IsPrime_Original) == 3169);
         }
     }
 }
