@@ -29,8 +29,77 @@ namespace PerformanceCodeIllustrator
         static Workers.PrimeNumbers_Practice _primesPractice = new Workers.PrimeNumbers_Practice();
         static Workers.PrimeNumberEvaluators _primeEvaluator = new Workers.PrimeNumberEvaluators();
 
+        static void Main(string[] args)
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            SetInfoColor();
+
+            WriteIntro();
+            ReadKey();
+            Console.Clear();
+
+            if (_demo)
+            {
+                // Test the original implementation
+                SetInfoColor();
+                Console.WriteLine("With the first implementation, we have a functional but slow outcome.");
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Original);
+                ReadKey();
+            }
+
+            if (_demo)
+            {
+                // Test the better formula
+                SetInfoColor();
+                Console.WriteLine("A quick google search revealed a better solution.");
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Improvement1);
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement1);
+                ReadKey();
+            }
+
+            if (_demo)
+            {
+                // Trivial optimizations and compiler discussion (compare release and debug builds)
+                SetInfoColor();
+                Console.WriteLine("Minimal evaluation yields even better results.");
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Improvement2);
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
+                ReadKey();
+            }
+
+            if (_demo)
+            {
+                // Demo the final implementation
+                SetInfoColor();
+                Console.WriteLine("The final implemenation required more consideration to acheive.");
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primes.IsPrime);
+                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primes.IsPrime);
+                ReadKey();
+            }
+
+            if (_demo)
+            {
+                CompareSmallSetInParallel();
+                ReadKey();
+            }
+
+            // Compare our optimized version against our cheap version.
+            BenchmarkSingleValues();
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, _primes.IsPrime);
+
+            //if (System.Diagnostics.Debugger.IsAttached)
+            {
+                Console.WriteLine(_pause);
+                Console.ReadKey();
+            }
+
+            Console.ResetColor();
+        }
+
         static void ReadKey()
         {
+            SetInfoColor();
             Console.WriteLine();
             if (_pauses)
             {
@@ -44,16 +113,31 @@ namespace PerformanceCodeIllustrator
                 {
                     _pauses = false;
                 }
-                Console.WriteLine();            
+                Console.WriteLine();
             }
 
+        }
+
+        static void SetInfoColor()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+        }
+
+        static void SetIstructionColor()
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+        }
+
+        static void SetResultColor()
+        {
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         static void WriteIntro()
         {
             Console.WriteLine("This project is intended to facillitate a discussion on performant code.");
             Console.WriteLine();
-            Console.WriteLine("Please feel free to improve and \\ or reuse this presentation providedd");
+            Console.WriteLine("Please feel free to improve and \\ or reuse this presentation provided");
             Console.WriteLine("Atticus Ellena is credited for the original preparation.");
             Console.WriteLine();
 #if DEBUG
@@ -70,116 +154,70 @@ namespace PerformanceCodeIllustrator
             int primes = EvaluatePrimesFunction.Invoke(from, to, IsPrimeFunction);
             string time = stopWatch.FormatElapsed();
 
-            Console.ForegroundColor = ConsoleColor.Blue;
+            SetIstructionColor();
             Console.WriteLine(String.Format("{0} using {1}", EvaluatePrimesFunction.Method.Name, IsPrimeFunction.Method.Name));
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(String.Format("Evaluating {0} numbers yielded {1} primes and took {2}", 
+            SetResultColor();
+            Console.WriteLine(String.Format("Evaluating {0} numbers yielded {1} primes and took {2}",
                                              to - from,
                                              primes,
                                              time));
         }
 
-        static void CompareLargeSingleValues()
+        static void BenchmarkSingleValues()
         {
+            BenchmarkSingleValue(49);
+            BenchmarkSingleValue(53);
+            BenchmarkSingleValue(1427);
+            BenchmarkSingleValue(2036329);
+            BenchmarkSingleValue(10004573);
+            BenchmarkSingleValue(10029889);
+        }
+
+        static void BenchmarkSingleValue(int testValue)
+        {
+            SetInfoColor();
+            Console.WriteLine("Benmark for value: " + testValue.ToString());
+
+            SetResultColor();
+
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            _primesPractice.IsPrime_Improvement2(10029889);
-            string time1 = stopWatch.FormatElapsed();
-            stopWatch.Restart();
-            _primes.IsPrime(10029889);
-            string time2 = stopWatch.FormatElapsed();
-            stopWatch.Restart();
-            _primesPractice.IsPrime_Improvement2(10004573);
-            string time3 = stopWatch.FormatElapsed();
-            stopWatch.Restart();
-            _primes.IsPrime(10004573);
-            string time4 = stopWatch.FormatElapsed();
+            bool isPrime = _primesPractice.IsPrime_Original(testValue);
+            string timeElapsed = stopWatch.FormatElapsed();
+            Console.WriteLine(String.Format("\t    IsPrime_Original returned {0}: {1}", isPrime, timeElapsed));
 
-            Console.WriteLine(
-                String.Format("Comparing large non-prime 10029889: IsPrime_Improvement2 ({0}) vs IsPrime({1})", 
-                time1, time2));
-            Console.WriteLine(
-                String.Format("Comparing large prime 10004573: IsPrime_Improvement2 ({0}) vs IsPrime({1})",
-                time3, time4));
+            stopWatch.Restart();
+            isPrime = _primesPractice.IsPrime_Improvement1(testValue);
+            timeElapsed = stopWatch.FormatElapsed();
+            Console.WriteLine(String.Format("\tIsPrime_Improvement1 returned {0}: {1}", isPrime, timeElapsed));
+
+            stopWatch.Restart();
+            isPrime = _primesPractice.IsPrime_Improvement2(testValue);
+            timeElapsed = stopWatch.FormatElapsed();
+            Console.WriteLine(String.Format("\tIsPrime_Improvement2 returned {0}: {1}", isPrime, timeElapsed));
+
+            stopWatch.Restart();
+            isPrime = _primes.IsPrime(testValue);
+            timeElapsed = stopWatch.FormatElapsed();
+            Console.WriteLine(String.Format("\t             IsPrime returned {0}: {1}", isPrime, timeElapsed));
+
+            Console.WriteLine();
         }
 
         static void CompareSmallSetInParallel()
         {
             // Parallel hurts when the sample size is too small
+            SetInfoColor();
             Console.WriteLine("Now that we have a solid IsPrime function, ");
             Console.WriteLine("we can consider other options such as multi-threaded evaluations.");
-            Console.WriteLine();
-            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _badParallelMax, _primes.IsPrime);
-            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _badParallelMax, _primes.IsPrime);
             Console.WriteLine();
             Console.WriteLine("These will of course expose even more complexity to account for.");
             Console.WriteLine("This example illustrates how optimizing has actually ");
             Console.WriteLine("hurt performance with a smaller data set.");
-        }
-
-        static void Main(string[] args)
-        {
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.White;
-
-            WriteIntro();
-            ReadKey();
-
-            if (_demo)
-            {
-                // Test the original implementation
-                Console.WriteLine("With the first implementation, we have a functional but slow outcome.");
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Original);
-                ReadKey();
-            }
-
-            if (_demo)
-            {
-                // Test the better formula
-                Console.WriteLine("A quick google search revealed a better solution.");
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Improvement1);
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement1);
-                ReadKey();
-            }
-
-            if (_demo)
-            {
-                // Trivial optimizations and compiler discussion (compare release and debug builds)
-                Console.WriteLine("Minimal evaluation yields even better results.");
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Improvement2);
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
-                ReadKey();
-            }
-
-            if (_demo)
-            {
-                // Demo the final implementation
-                Console.WriteLine("The final implemenation required more consideration to acheive.");
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primes.IsPrime);
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primes.IsPrime);
-                ReadKey();
-            }
-
-            if (_demo)
-            {
-                CompareSmallSetInParallel();
-                ReadKey();
-            }
-
-            // Compare our optimized version against our cheap version.
-            CompareLargeSingleValues();
             Console.WriteLine();
-            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
-            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, _primes.IsPrime);
-
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _badParallelMax, _primes.IsPrime);
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _badParallelMax, _primes.IsPrime);
             Console.WriteLine();
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                Console.WriteLine(_pause);
-                Console.ReadKey();
-            }
-
-            Console.ResetColor();
         }
     }
 }

@@ -80,11 +80,18 @@ namespace Workers
                 {
                     return true;
                 }
-                if (testValue % _primes[iteration] == 0)
-                {
-                    return false;
-                }
-                ++iteration;
+
+                /*
+                 * More of the psuedo Duff technique
+                 * Note: This implementation is dangerous as it does not calculate bounds of the array
+                 *       but we lose any benefit without skipping some calculations.
+                 * Note: We know that for the array, no prime will accidently catch the 2nd check due to the Sqrt check
+                */
+                System.Diagnostics.Debug.Assert((_primeCount & 1) == 0); // Assertion specific to 2x check
+                if (testValue % _primes[iteration] == 0) { return false; } ++iteration;
+                if (testValue % _primes[iteration] == 0) { return false; } ++iteration;
+                //if (testValue % _primes[iteration] == 0) { return false; } ++iteration;
+                //if (testValue % _primes[iteration] == 0) { return false; } ++iteration;
             } while (iteration < _primeCount);
 
             //System.Diagnostics.Trace.TraceInformation("IsPrime iterations: {0}", iteration);

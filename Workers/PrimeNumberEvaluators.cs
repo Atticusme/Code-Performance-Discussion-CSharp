@@ -47,7 +47,8 @@ namespace Workers
         }
 
         /// <summary>
-        /// Returns the highest value that is a prime number within a speicfied range of values.
+        /// Returns the highest value that is a prime number within a speicfied range of values 
+        /// or -1 if no prime is within the range.
         /// </summary>
         public int GetMaxPrimeInRange(int from, int to, Func<int, bool> IsPrimeFunction)
         {
@@ -85,6 +86,9 @@ namespace Workers
             return max;
         }
 
+        /// <summary>
+        /// Returns the first prime number higher that the start value.
+        /// </summary>
         public int NextPrime(int startValue, Func<int, bool> IsPrimeFunction)
         {
             int prime = startValue + 1;
