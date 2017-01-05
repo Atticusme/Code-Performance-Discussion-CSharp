@@ -88,7 +88,7 @@ namespace PerformanceCodeIllustrator
             DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
             DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _largeMax, _primes.IsPrime);
 
-            //if (System.Diagnostics.Debugger.IsAttached)
+            //if (Debugger.IsAttached)
             {
                 Console.WriteLine(_pause);
                 Console.ReadKey();
@@ -125,7 +125,7 @@ namespace PerformanceCodeIllustrator
 
         static void SetIstructionColor()
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Cyan;
         }
 
         static void SetResultColor()
@@ -215,6 +215,11 @@ namespace PerformanceCodeIllustrator
             Console.WriteLine("This example illustrates how optimizing has actually ");
             Console.WriteLine("hurt performance with a smaller data set.");
             Console.WriteLine();
+
+            {
+                // Initialization seems to be corrupting results in some cases.
+                _primeEvaluator.EvaluatePrimesInParallel(0, 10, _primes.IsPrime);
+            }
             DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _badParallelMax, _primes.IsPrime);
             DoEvaluatePrimes(_primeEvaluator.EvaluatePrimesInParallel, 0, _badParallelMax, _primes.IsPrime);
             Console.WriteLine();

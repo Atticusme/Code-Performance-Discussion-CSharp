@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Workers
 {
@@ -10,8 +11,8 @@ namespace Workers
         /// The decision of how many items to put in the array was based on 
         /// the primary test value of 2,000,000 defined in the console application and then extended to 10,000,000
         /// </summary>
-        private const int _primeCount = 444;// 222 AND 1427 COVERS 2000000
-        private int[] _primes = new int[_primeCount] { /*2, 3, 5,*/ 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 
+        private const int _primeCount = 446;// 222 AND 1427 COVERS 2000000
+        private int[] _primes = new int[_primeCount] { /*2, */3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 
             137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 
             317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 
             523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 
@@ -49,27 +50,12 @@ namespace Workers
         {
             if (testValue < 2) return false;
 
-            #region Factoring out the most common eliminators to better performance
+            // A test for odd number is quicker than a test for remainder and will eliminate nearly 1\2 test values
+            // Breaking out this test avoid a couple of calculations below for better performance.
+            if ((testValue & 1) == 0)
             {
-                // This implementation of testing and discarding in pairs is quicker 
-                // than testing for the primes and then testing for the non-primes.
-                // The commented functions IsLowPrime and CommonElimination called
-                // in sequence illustrate the former implementation.
-
-                if (testValue == 2) return true;
-                // A test for odd number is quicker than a test for remainder.
-                // 1/2 of all numbers will be eliminated if odd
-                if ((testValue & 1) == 0) return false; 
-
-                if (testValue == 3) return true;
-                if ((testValue % 3) == 0) return false;
-
-                if (testValue == 5) return true;
-                if ((testValue % 5) == 0) return false;
-
-                // The first non prime number to fall through is 49 and the next is 77 and so on.
+                return (testValue == 2);
             }
-            #endregion
 
             int maxIteration = (int)Math.Floor(Math.Sqrt(testValue));   // minimize the number of evaluations
 
@@ -86,52 +72,34 @@ namespace Workers
                  * Note: This implementation is dangerous as it does not calculate bounds of the array
                  *       but we lose any benefit without skipping some calculations.
                  * Note: We know that for the array, no prime will accidently catch the 2nd check due to the Sqrt check
+                 * Note: Depending upon the array size, more tests could be run in this manor, but with 
+                 * more risk and diminishing returns.
                 */
-                System.Diagnostics.Debug.Assert((_primeCount & 1) == 0); // Assertion specific to 2x check
+                Debug.Assert((_primeCount & 1) == 0); // Assertion specific to 2x check
                 if (testValue % _primes[iteration] == 0) { return false; } ++iteration;
                 if (testValue % _primes[iteration] == 0) { return false; } ++iteration;
-                //if (testValue % _primes[iteration] == 0) { return false; } ++iteration;
-                //if (testValue % _primes[iteration] == 0) { return false; } ++iteration;
             } while (iteration < _primeCount);
-
-            //System.Diagnostics.Trace.TraceInformation("IsPrime iterations: {0}", iteration);
 
             return (IsPrimeForVeryLargeNumbers(testValue, maxIteration));
         }
-
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //private bool IsLowPrime(int testValue)
-        //{
-        //    return ((testValue == 2) || (testValue == 3) || (testValue == 5));
-        //}
-
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //private bool CommonElimination(int testValue)
-        //{
-        //    return (((testValue & 1) == 0) || // Found small benefit when testing even vs. remainder.
-        //            (testValue % 3) == 0 ||
-        //            (testValue % 5) == 0);
-        //}
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsPrimeForVeryLargeNumbers(int testValue, int maxIteration)
         {
             int iteration = 3167;   // The next prime after the array end.
             // Ensure that if the array is changed, the hard coded value will be updated.
-            System.Diagnostics.Debug.Assert(
+            Debug.Assert(
                 iteration == new PrimeNumberEvaluators().NextPrime(_primes[_primeCount - 1], this.IsPrime));
 
             do
             {
                 if ((testValue % iteration) == 0)
                 {
-                    //System.Diagnostics.Trace.TraceInformation("IsPrimeForVeryLargeNumbers iterations: {0}", iteration);
                     return false;
                 }
                 ++iteration;
             } while (iteration <= maxIteration);
             
-            //System.Diagnostics.Trace.TraceInformation("IsPrimeForVeryLargeNumbers iterations: {0}", iteration);
             return true;
         }
     }
