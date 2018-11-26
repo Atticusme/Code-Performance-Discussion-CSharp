@@ -38,50 +38,7 @@ namespace PerformanceCodeIllustrator
             ReadKey();
             Console.Clear();
 
-            if (_demo)
-            {
-                // Test the original implementation
-                SetInfoColor();
-                Console.WriteLine("With the first implementation, we have a functional but slow outcome.");
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Original);
-                ReadKey();
-            }
-
-            if (_demo)
-            {
-                // Test the better formula
-                SetInfoColor();
-                Console.WriteLine("A quick google search revealed a better solution.");
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Improvement1);
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement1);
-                ReadKey();
-            }
-
-            if (_demo)
-            {
-                // Trivial optimizations and compiler discussion (compare release and debug builds)
-                SetInfoColor();
-                Console.WriteLine("Minimal evaluation yields even better results.");
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Improvement2);
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
-                ReadKey();
-            }
-
-            if (_demo)
-            {
-                // Demo the final implementation
-                SetInfoColor();
-                Console.WriteLine("The final implemenation required more consideration to acheive.");
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primes.IsPrime);
-                DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primes.IsPrime);
-                ReadKey();
-            }
-
-            if (_demo)
-            {
-                CompareSmallSetInParallel();
-                ReadKey();
-            }
+            DoDemo();
 
             // Compare our optimized version against our cheap version.
             BenchmarkSingleValues();
@@ -95,6 +52,58 @@ namespace PerformanceCodeIllustrator
             }
 
             Console.ResetColor();
+        }
+
+        private static void DoDemo()
+        {
+            if (_demo)
+            {
+                TestOriginal();
+                TestRevision1();
+                TestRevision2();
+                TestFinalRevision();
+                CompareSmallSetInParallel();
+                ReadKey();
+            }
+        }
+
+        private static void TestFinalRevision()
+        {
+            // Demo the final implementation
+            SetInfoColor();
+            Console.WriteLine("The final implemenation required more consideration to acheive.");
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primes.IsPrime);
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primes.IsPrime);
+            ReadKey();
+        }
+
+        private static void TestRevision2()
+        {
+            // Trivial optimizations and compiler discussion (compare release and debug builds)
+            SetInfoColor();
+            Console.WriteLine("Minimal evaluation yields even better results.");
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Improvement2);
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement2);
+            ReadKey();
+        }
+
+        private static void TestRevision1()
+        {
+            // Test the better formula
+            SetInfoColor();
+            Console.WriteLine("A quick google search revealed a better solution.");
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Improvement1);
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _largeMax, _primesPractice.IsPrime_Improvement1);
+            ReadKey();
+        }
+
+        private static void TestOriginal()
+        {
+            // Test the original implementation
+            SetInfoColor();
+            Console.WriteLine("With the first implementation, we have a functional but slow outcome.");
+            DoEvaluatePrimes(_primeEvaluator.EvaluatePrimes, 0, _smallMax, _primesPractice.IsPrime_Original);
+            ReadKey();
         }
 
         static void ReadKey()

@@ -6,71 +6,39 @@ namespace PerformanceCodeIllustratorTests
     [TestClass]
     public class PrimeNumberTests
     {
+        public TestContext TestContext { set; get; }
         private Workers.PrimeNumbers_Practice primesPractice = new Workers.PrimeNumbers_Practice();
         private Workers.PrimeNumbers primes = new Workers.PrimeNumbers();
         private Workers.PrimeNumberEvaluators primeEvaluator = new Workers.PrimeNumberEvaluators();
 
-        [TestMethod]
-        public void ZeroIsNotAPrime()
+        [TestMethod()] 
+        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", 
+            "|DataDirectory|\\Data\\PrimeNumbers.csv", "PrimeNumbers#csv", 
+            DataAccessMethod.Sequential)]
+        public void PrimeNumberConfirmations()
         {
-            Assert.IsFalse(primesPractice.IsPrime_Original(0));
-            Assert.IsFalse(primesPractice.IsPrime_Improvement1(0));
-            Assert.IsFalse(primesPractice.IsPrime_Improvement2(0));
-            Assert.IsFalse(primes.IsPrime(0));
+            int prime = Convert.ToInt32(TestContext.DataRow["Prime"]);
+            TestContext.WriteLine("Testing that {0} is a prime number.", prime);
+            string msg = String.Format("{0} is a not prime number.", prime);
+            Assert.IsTrue(primesPractice.IsPrime_Original(prime), msg);
+            Assert.IsTrue(primesPractice.IsPrime_Improvement1(prime), msg);
+            Assert.IsTrue(primesPractice.IsPrime_Improvement2(prime), msg);
+            Assert.IsTrue(primes.IsPrime(prime), msg);
         }
 
-        [TestMethod]
-        public void OneIsNotAPrime()
+        [TestMethod()]
+        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", 
+            "|DataDirectory|\\Data\\NonPrimeNumbers.csv", "NonPrimeNumbers#csv", 
+            DataAccessMethod.Sequential)]
+        public void NonPrimeNumberConfirmations()
         {
-            Assert.IsFalse(primesPractice.IsPrime_Original(1));
-            Assert.IsFalse(primesPractice.IsPrime_Improvement1(1));
-            Assert.IsFalse(primesPractice.IsPrime_Improvement2(1));
-            Assert.IsFalse(primes.IsPrime(1));
-        }
-
-        [TestMethod]
-        public void PrimeTestsFor2AreTrue()
-        {
-            Assert.IsTrue(primesPractice.IsPrime_Original(2));
-            Assert.IsTrue(primesPractice.IsPrime_Improvement1(2));
-            Assert.IsTrue(primesPractice.IsPrime_Improvement2(2));
-            Assert.IsTrue(primes.IsPrime(2));
-        }
-
-        [TestMethod]
-        public void PrimeTestsFor3AreTrue()
-        {
-            Assert.IsTrue(primesPractice.IsPrime_Original(3));
-            Assert.IsTrue(primesPractice.IsPrime_Improvement1(3));
-            Assert.IsTrue(primesPractice.IsPrime_Improvement2(3));
-            Assert.IsTrue(primes.IsPrime(3));
-        }
-
-        [TestMethod]
-        public void PrimeTestsFor5AreTrue()
-        {
-            Assert.IsTrue(primesPractice.IsPrime_Original(5));
-            Assert.IsTrue(primesPractice.IsPrime_Improvement1(5));
-            Assert.IsTrue(primesPractice.IsPrime_Improvement2(5));
-            Assert.IsTrue(primes.IsPrime(5));
-        }
-
-        [TestMethod]
-        public void PrimeTestsFor7AreTrue()
-        {
-            Assert.IsTrue(primesPractice.IsPrime_Original(7));
-            Assert.IsTrue(primesPractice.IsPrime_Improvement1(7));
-            Assert.IsTrue(primesPractice.IsPrime_Improvement2(7));
-            Assert.IsTrue(primes.IsPrime(7));
-        }
-
-        [TestMethod]
-        public void PrimeTestsFor9AreFalse()
-        {
-            Assert.IsFalse(primesPractice.IsPrime_Original(9));
-            Assert.IsFalse(primesPractice.IsPrime_Improvement1(9));
-            Assert.IsFalse(primesPractice.IsPrime_Improvement2(9));
-            Assert.IsFalse(primes.IsPrime(9));
+            int nonPrime = Convert.ToInt32(TestContext.DataRow["NonPrime"]);
+            TestContext.WriteLine("Testing that {0} is not a prime number.", nonPrime);
+            string msg = String.Format("{0} is a prime number.", nonPrime);
+            Assert.IsFalse(primesPractice.IsPrime_Original(nonPrime), msg);
+            Assert.IsFalse(primesPractice.IsPrime_Improvement1(nonPrime), msg);
+            Assert.IsFalse(primesPractice.IsPrime_Improvement2(nonPrime), msg);
+            Assert.IsFalse(primes.IsPrime(nonPrime), msg);
         }
 
         [TestMethod]
